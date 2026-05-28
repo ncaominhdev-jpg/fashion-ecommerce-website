@@ -1,0 +1,99 @@
+/* Giao diện chung */
+.edit-category-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: #fff; /* Chuyển sang nền trắng */
+    min-height: 100vh;
+    padding: 40px;
+}
+
+.content {
+    width: 95%;
+    max-width: 1400px;
+    display: flex;
+    justify-content: center;
+}
+
+/* Card chứa form */
+.edit-category-card {
+    background-color: #f9f9f9; /* Nền trắng sáng */
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 15px rgba(128, 0, 255, 0.7); /* Bóng tím */
+    margin-top: 30px;
+    width: 50%;
+    transform: translateX(50px); /* Dịch qua phải */
+    color: black; /* Chữ màu đen */
+}
+
+.edit-category-card h2 {
+    color: #800080; /* Màu tím đậm cho tiêu đề */
+    font-size: 28px;
+    text-align: center;
+}
+
+/* Form */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 18px;
+    margin-bottom: 8px;
+    color: #800080; /* Màu tím đậm cho nhãn */
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 16px;
+    background-color: #f1f1f1; /* Màu nền sáng cho các input */
+    color: black; /* Màu chữ đen */
+}
+
+.form-group textarea {
+    height: 100px;
+}
+
+/* Nút */
+.form-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.save-btn,
+.cancel-btn {
+    padding: 12px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.save-btn {
+    background-color: #800080; /* Nút tím đậm */
+    color: white;
+}
+
+.save-btn:hover {
+    background-color: #6a006a; /* Màu tím đậm hơn khi hover */
+}
+
+.cancel-btn {
+    background-color: #ff3300; /* Nút đỏ cho hủy */
+    color: white;
+}
+
+.cancel-btn:hover {
+    background-color: #cc2900; /* Màu đỏ đậm khi hover */
+}

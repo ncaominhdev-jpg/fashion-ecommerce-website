@@ -1,0 +1,141 @@
+/* ===== Định dạng container chính ===== */
+.category-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #ffffff; /* Màu nền trắng cho toàn bộ trang */
+    padding-left: 10%; /* Điều chỉnh khoảng cách bên trái */
+}
+
+/* ===== Nội dung chính ===== */
+.category-content {
+    width: 100%;
+    max-width: 800px;
+    background: #f1f1f1; /* Nền sáng hơn cho phần nội dung chính */
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(128, 0, 255, 0.6); /* Thêm bóng đổ màu tím */
+    position: relative;
+}
+
+/* ===== Tiêu đề và nút quay lại ===== */
+.category-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.category-title h2 {
+    font-size: 28px;
+    color: #9933cc; /* Màu tím cho tiêu đề */
+    font-weight: bold;
+}
+
+/* ===== Form ===== */
+.category-input-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* ===== Các ô input ===== */
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.input-group label {
+    font-size: 18px;
+    color: #333; /* Màu chữ tối cho nhãn */
+    font-weight: bold;
+}
+
+.input-group input,
+.input-group textarea,
+.input-group select {
+    width: 100%;
+    padding: 15px;
+    border: 1px solid #666;
+    border-radius: 10px;
+    background: #f8f8f8; /* Nền sáng cho các ô input */
+    color: #333; /* Chữ tối màu */
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus,
+.input-group select:focus {
+    border-color: #9933cc; /* Màu viền tím khi focus */
+    box-shadow: 0 0 8px rgba(153, 51, 204, 0.5); /* Thêm hiệu ứng viền tím khi focus */
+}
+
+/* ===== Ô mô tả lớn hơn ===== */
+.input-group textarea {
+    resize: none;
+    height: 150px;
+}
+
+/* ===== Nút lưu và hủy ===== */
+.action-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+.save-button {
+    background: #9933cc; /* Màu nền tím cho nút lưu */
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 48%;
+    text-decoration: none;
+}
+
+.save-button:hover {
+    background: #7a2c9b; /* Thay màu nền khi hover */
+}
+
+.cancel-button {
+    background: #ff4d94; /* Màu nền hồng tím cho nút hủy */
+    color: white;
+    padding: 16px;
+    border: none;
+    border-radius: 10px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: 0.3s;
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 48%;
+    text-decoration: none;
+}
+
+.cancel-button:hover {
+    background: #cc3f7f; /* Thay màu nền khi hover */
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .category-content {
+        max-width: 95%;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .save-button, .cancel-button {
+        width: 100%; /* Đảm bảo các nút có chiều rộng đầy đủ */
+    }
+}

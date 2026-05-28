@@ -1,0 +1,154 @@
+.main-container {
+    display: flex;
+}
+
+.product-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Đẩy nội dung lên trên một chút */
+    padding-top: 50px; /* Tạo khoảng cách từ trên xuống */
+    height: 100vh;
+    background-color: #ffffff;
+    margin-left: 250px; /* Chừa khoảng trống cho sidebar */
+}
+
+.product-box {
+    background: #f0f0f0;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
+    width: 80%;
+    text-align: center;
+}
+
+.product-title {
+    color: #8a2be2;
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+.product-actions {
+    text-align: right;
+    margin-bottom: 20px;
+}
+
+.btn-add {
+    background-color: #ff4757;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+.btn-add:hover {
+    background-color: #e84118;
+    transform: scale(1.05);
+}
+
+.product-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #e6e6fa;
+    color: black;
+}
+
+.product-table th, .product-table td {
+    padding: 15px;
+    border: 1px solid #444;
+    text-align: center;
+}
+
+.product-table th {
+    background-color: #8a2be2;
+    color: white;
+}
+
+.action-buttons {
+    display: flex;
+    justify-content: center;
+}
+
+.btn-edit, .btn-delete {
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.btn-edit {
+    background-color: #ffa502;
+}
+
+.btn-edit:hover {
+    background-color: #ffcc00;
+}
+
+.btn-delete {
+    background-color: #e84118;
+}
+
+.product-action-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 2px; /* Giảm khoảng cách giữa các nút */
+}
+
+.btn-edit-product {
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    background-color: #ffa502; /* Màu vàng */
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-edit-product:hover {
+    background-color: #ffcc00; /* Màu sáng hơn khi hover */
+}
+
+.btn-delete-product {
+    padding: 8px 12px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    background-color: #e84118; /* Màu đỏ */
+    border: none;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-delete-product:hover {
+    background-color: #ff4757; /* Màu đỏ sáng hơn khi hover */
+}
+.input-search {
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    width: 220px;
+    font-size: 14px;
+}
+
+.btn-search {
+    padding: 6px 12px;
+    background-color: #6f42c1;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 10px;
+    font-size: 14px;
+}
+
+.btn-search:hover {
+    background-color: #5a35a0;
+}

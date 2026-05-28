@@ -1,0 +1,90 @@
+.edit-product-wrapper {
+    display: flex;
+    justify-content: center;
+    padding: 32px;
+    background: #f8f8f8;
+  }
+  
+  .edit-product-card {
+    background: #f1f1f1;
+    padding: 24px 32px;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(170, 102, 255, 0.3);
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  .edit-product-title {
+    text-align: center;
+    font-size: 22px;
+    font-weight: bold;
+    color: #9b40f8;
+    margin-bottom: 20px;
+  }
+  
+  .edit-product-form .form-group {
+    margin-bottom: 12px; /* Giảm từ 20px xuống 12px */
+  }
+  
+  .edit-product-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 5px; /* Giảm từ 8px xuống 5px */
+    font-size: 14px;
+  }
+  
+  .edit-product-form input[type="text"],
+  .edit-product-form input[type="number"],
+  .edit-product-form input[type="file"],
+  .edit-product-form select,
+  .edit-product-form textarea {
+    width: 100%;
+    padding: 8px 12px; /* Nhỏ hơn */
+    background-color: #eae6fe;
+    border: 1px solid #9b40f8;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+  }
+  
+  .edit-product-form textarea {
+    min-height: 80px; /* giảm chiều cao mặc định */
+    resize: vertical;
+  }
+  
+  .edit-product-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px; /* giảm khoảng cách nút với input */
+  }
+  
+  .btn-save-product {
+    background-color: #ff4b5c;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+  }
+  
+  .btn-save-product:hover {
+    background-color: #e33b4c;
+  }
+  
+  .btn-cancel-product {
+    background-color: #4a4a4a;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background 0.3s;
+  }
+  
+  .btn-cancel-product:hover {
+    background-color: #3a3a3a;
+  }
+  
