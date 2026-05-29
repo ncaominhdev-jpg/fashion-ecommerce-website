@@ -34,7 +34,7 @@ class ProductVariantController {
           {
             model: ColorModel,
             as: 'color',
-            attributes: ['id', 'color_code']
+            attributes: ['id', 'color_name', 'color_code']
           }
         ]
       });

@@ -1,51 +1,51 @@
 import { FaFacebookF, FaInstagram, FaTiktok, FaCcVisa, FaCcMastercard } from "react-icons/fa";
-import "./footer.css";
+import { Mail, MapPin, Phone } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="client-footer">
-      <div className="footer-container">
-        {/* Thông tin liên hệ */}
-        <div className="footer-column">
-          <h3>📍 Thông Tin Liên Hệ</h3>
-          <p>🏠 123 Nguyễn Văn A, Quận 1, TP. HCM</p>
-          <p>📞 0901 234 567</p>
-          <p>📧 support@polyfashion.com</p>
+    <footer className="mt-20 bg-ink text-white">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-14 sm:px-6 md:grid-cols-2 lg:grid-cols-4 lg:px-8">
+        <div>
+          <p className="font-display text-3xl font-bold">Poly Fashion</p>
+          <p className="mt-4 text-sm leading-7 text-white/70">
+            Không gian mua sắm thời trang hiện đại với sản phẩm chọn lọc, phối đồ dễ ứng dụng và dịch vụ tận tâm.
+          </p>
         </div>
 
-        {/* Liên kết nhanh */}
-        <div className="footer-column">
-          <h3>🔗 Liên Kết Nhanh</h3>
-          <ul>
-            <li><a href="/about">Về Chúng Tôi</a></li>
-            <li><a href="/return-policy">Chính Sách Đổi Trả</a></li>
-            <li><a href="/guide">Hướng Dẫn Mua Hàng</a></li>
-          </ul>
-        </div>
-
-        {/* Mạng xã hội */}
-        <div className="footer-column">
-          <h3>🌍 Kết Nối Với Chúng Tôi</h3>
-          <div className="social-icons">
-            <a href="https://facebook.com" className="facebook"><FaFacebookF /></a>
-            <a href="https://instagram.com" className="instagram"><FaInstagram /></a>
-            <a href="https://tiktok.com" className="tiktok"><FaTiktok /></a>
+        <div>
+          <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-champagne">Liên hệ</h3>
+          <div className="mt-5 space-y-3 text-sm text-white/75">
+            <p className="flex gap-3"><MapPin size={18} className="mt-1 text-champagne" />123 Nguyễn Văn A, Quận 1, TP. HCM</p>
+            <p className="flex gap-3"><Phone size={18} className="mt-1 text-champagne" />0901 234 567</p>
+            <p className="flex gap-3"><Mail size={18} className="mt-1 text-champagne" />support@polyfashion.com</p>
           </div>
         </div>
 
-        {/* Thanh toán */}
-        <div className="footer-column">
-          <h3>💳 Thanh Toán An Toàn</h3>
-          <div className="payment-icons">
-            <FaCcVisa className="visa" />
-            <FaCcMastercard className="mastercard" />
+        <div>
+          <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-champagne">Hỗ trợ</h3>
+          <ul className="mt-5 space-y-3 text-sm text-white/75">
+            <li><a href="/about" className="hover:text-white">Về chúng tôi</a></li>
+            <li><a href="/return-policy" className="hover:text-white">Chính sách đổi trả</a></li>
+            <li><a href="/guide" className="hover:text-white">Hướng dẫn mua hàng</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 className="text-sm font-bold uppercase tracking-[0.2em] text-champagne">Kết nối</h3>
+          <div className="mt-5 flex gap-3">
+            <a href="https://facebook.com" className="grid h-11 w-11 place-items-center rounded-full bg-white/10 transition hover:bg-clay"><FaFacebookF /></a>
+            <a href="https://instagram.com" className="grid h-11 w-11 place-items-center rounded-full bg-white/10 transition hover:bg-clay"><FaInstagram /></a>
+            <a href="https://tiktok.com" className="grid h-11 w-11 place-items-center rounded-full bg-white/10 transition hover:bg-clay"><FaTiktok /></a>
+          </div>
+          <div className="mt-6 flex gap-3 text-4xl text-white/80">
+            <FaCcVisa />
+            <FaCcMastercard />
           </div>
         </div>
       </div>
 
-      {/* Copyright */}
-      <div className="footer-bottom">
-        © 2025 Poly Fashion. All Rights Reserved.
+      <div className="border-t border-white/10 px-4 py-5 text-center text-sm text-white/60">
+        © 2026 Poly Fashion. All rights reserved.
       </div>
     </footer>
   );

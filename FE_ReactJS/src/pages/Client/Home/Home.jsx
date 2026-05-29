@@ -5,7 +5,6 @@ import DealsSlider from "./DealsSlider/DealsSlider";
 import Trends from "./Trends/Trends";
 import CustomerReviews from "./CustomerReviews/CustomerReviews";
 import BlogList from "./BlogList/BlogList";
-import "../../../assets/styles/home.css";
 import BrandLogos from "./BrandLogos/BrandLogos";
 
 const Home = () => {
@@ -13,7 +12,7 @@ const Home = () => {
     return (
         <>
             <BannerSlider />
-            <main className="container">
+            <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <CategorySection />
 
                 <FeaturedProducts />

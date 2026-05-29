@@ -1,7 +1,8 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Outlet } from "react-router";
+import { Toaster } from "sonner";
 import ClientLayout from "./layouts/Client/ClientLayout";
 import Home from "./pages/Client/Home/Home";
-import "./assets/styles/global.css"
 import Shop from "./pages/Client/Shop/Shop";
 import ContactPage from "./pages/Client/Contact/Contact";
 import ProfilePage from "./pages/Client/Profile/Profile";
@@ -9,14 +10,11 @@ import Login from "./pages/Client/Login/login";
 import Register from "./pages/Client/Register/register";
 import Cart from "./pages/Client/Cart/cart";
 import ProductDetail from "./pages/Client/ProductDetail/ProductDetail";
-import { Outlet } from "react-router";
-import Payment from "./pages/Client/Payment/Payment"
+import Payment from "./pages/Client/Payment/Payment";
 import OrderUser from "./pages/Client/Order/Order";
-import ShippingAddressManager from "./pages/Client/ShippingAddress.Manager/ShippingAddressManager"
+import ShippingAddressManager from "./pages/Client/ShippingAddress.Manager/ShippingAddressManager";
 import AdminProtectedRoute from "./components/Admin/AdminProtectedRoute";
 import OrderDetailUser from "./pages/Client/OrderDetails/OrderDetails";
-
-// Import các trang
 import Dashboard from "./view/pages/admin/home/home";
 import Product from "./view/pages/admin/product/product";
 import Category from "./view/pages/admin/category/category";
@@ -28,21 +26,37 @@ import AddCategory from "./view/pages/admin/category/add-category/add-category";
 import AddProduct from "./view/pages/admin/product/add-product/add-product";
 import EditProduct from "./view/pages/admin/product/edit-product/edit-product";
 
-
-
-// Layout chung cho Admin
 function AdminLayout() {
-  return (
-    <div>
+  return <Outlet />;
+}
 
-      <Outlet /> {/* Quan trọng: Render nội dung các trang con */}
-    </div>
+function NotFound() {
+  return (
+    <main className="grid min-h-screen place-items-center bg-linen px-6 text-center">
+      <div>
+        <p className="text-sm font-bold uppercase tracking-[0.28em] text-clay">404</p>
+        <h1 className="mt-3 text-4xl font-bold tracking-normal text-ink">Trang không tồn tại</h1>
+        <p className="mt-3 text-neutral-600">Đường dẫn bạn nhập không có trong hệ thống Poly Fashion.</p>
+      </div>
+    </main>
   );
 }
 
 function App() {
   return (
     <BrowserRouter>
+      <Toaster
+        richColors
+        closeButton
+        position="top-right"
+        toastOptions={{
+          style: {
+            borderRadius: "18px",
+            fontFamily: '"Be Vietnam Pro", sans-serif',
+            fontWeight: 600,
+          },
+        }}
+      />
       <Routes>
         <Route path="/" element={<ClientLayout />}>
           <Route index element={<Home />} />
@@ -58,13 +72,16 @@ function App() {
           <Route path="order-detail/:id" element={<OrderDetailUser />} />
           <Route path="shipping-address-manager" element={<ShippingAddressManager />} />
         </Route>
-        {/* Admin Layout */}
-        <Route path="/admin" element={
-          <AdminProtectedRoute>
-            <AdminLayout />
-          </AdminProtectedRoute>
-        }>
-          <Route index element={<Dashboard />} /> {/* Trang mặc định /admin */}
+
+        <Route
+          path="/admin"
+          element={
+            <AdminProtectedRoute>
+              <AdminLayout />
+            </AdminProtectedRoute>
+          }
+        >
+          <Route index element={<Dashboard />} />
           <Route path="product" element={<Product />} />
           <Route path="AddProduct" element={<AddProduct />} />
           <Route path="EditProduct/:id" element={<EditProduct />} />
@@ -75,8 +92,8 @@ function App() {
           <Route path="users" element={<User />} />
           <Route path="comments" element={<Comment />} />
         </Route>
-        {/* Route 404 nếu nhập sai đường dẫn */}
-        <Route path="*" element={<h2>Trang không tồn tại</h2>} />
+
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );

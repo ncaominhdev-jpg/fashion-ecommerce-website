@@ -1,219 +1,199 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useCookies } from "react-cookie";
+import { Minus, Plus, Trash2 } from "lucide-react";
 import axios from "axios";
 import Constants from "../../../Constants";
-import "./cart.css";
 
 function Cart() {
-    const [cookies] = useCookies(["token"]);
-    const [cartItems, setCartItems] = useState([]);
-    const [selectedItems, setSelectedItems] = useState([]);
+  const [cookies] = useCookies(["token"]);
+  const [cartItems, setCartItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState([]);
 
-    useEffect(() => {
-        fetchCartData();
-    }, []);
+  const fetchCartData = useCallback(async () => {
+    try {
+      const user = JSON.parse(localStorage.getItem("user"));
+      if (!user?.id || !cookies.token) return;
 
-    const fetchCartData = async () => {
-        try {
-            const user = JSON.parse(localStorage.getItem("user"));
-            if (!user?.id) return;
+      const res = await axios.get(`${Constants.DOMAIN_API}/cart/user/${user.id}`, {
+        headers: { Authorization: `Bearer ${cookies.token}` },
+      });
 
-            const res = await axios.get(`${Constants.DOMAIN_API}/cart/user/${user.id}`, {
-                headers: { Authorization: `Bearer ${cookies.token}` }
-            });
+      const items = (res.data.data || []).map((item) => {
+        const originalPrice = Number(item.price || 0);
+        const salePrice = Number(item.sale_price || 0);
+        const finalPrice = salePrice > 0 && salePrice < originalPrice ? salePrice : originalPrice;
 
-            const items = res.data.data.map(item => {
-                const finalPrice = item.sale_price > 0 ? item.sale_price : item.price;
-                return {
-                    id: item.id,
-                    name: item.name,
-                    image: item.image,
-                    price: finalPrice,
-                    original_price: item.price,
-                    sale_price: item.sale_price,
-                    quantity: item.quantity,
-                    color: item.color,
-                    size: item.size,
-                    variant_id: item.variant_id,
-                };
-            });
+        return {
+          id: item.id,
+          name: item.name || "Sản phẩm",
+          image: item.image,
+          price: finalPrice,
+          original_price: originalPrice,
+          sale_price: salePrice,
+          quantity: Number(item.quantity || 1),
+          color: item.color,
+          size: item.size,
+          variant_id: item.variant_id,
+        };
+      });
 
-            setCartItems(items);
-        } catch (err) {
-            console.error("Lỗi lấy giỏ hàng:", err);
-        }
-    };
+      setCartItems(items);
+    } catch (err) {
+      console.error("Lỗi lấy giỏ hàng:", err);
+    }
+  }, [cookies.token]);
 
-    const updateQuantity = async (itemId, newQuantity) => {
-        try {
-            await axios.put(`${Constants.DOMAIN_API}/cart/${itemId}`, {
-                quantity: newQuantity
-            }, {
-                headers: { Authorization: `Bearer ${cookies.token}` }
-            });
+  useEffect(() => {
+    fetchCartData();
+  }, [fetchCartData]);
 
-            setCartItems(cartItems.map(item =>
-                item.id === itemId ? { ...item, quantity: newQuantity } : item
-            ));
-        } catch (err) {
-            console.error("Cập nhật số lượng thất bại:", err);
-        }
-    };
+  const updateQuantity = async (itemId, newQuantity) => {
+    try {
+      await axios.put(
+        `${Constants.DOMAIN_API}/cart/${itemId}`,
+        { quantity: newQuantity },
+        { headers: { Authorization: `Bearer ${cookies.token}` } }
+      );
 
-    const removeItem = async (itemId) => {
-        try {
-            await axios.delete(`${Constants.DOMAIN_API}/cart/${itemId}`, {
-                headers: { Authorization: `Bearer ${cookies.token}` }
-            });
+      setCartItems((items) => items.map((item) => (item.id === itemId ? { ...item, quantity: newQuantity } : item)));
+    } catch (err) {
+      console.error("Cập nhật số lượng thất bại:", err);
+    }
+  };
 
-            setCartItems(cartItems.filter(item => item.id !== itemId));
-            setSelectedItems(selectedItems.filter(id => id !== itemId));
-        } catch (err) {
-            console.error("Xoá sản phẩm thất bại:", err);
-        }
-    };
+  const removeItem = async (itemId) => {
+    try {
+      await axios.delete(`${Constants.DOMAIN_API}/cart/${itemId}`, {
+        headers: { Authorization: `Bearer ${cookies.token}` },
+      });
 
-    const handleSelectItem = (itemId) => {
-        if (selectedItems.includes(itemId)) {
-            setSelectedItems(selectedItems.filter(id => id !== itemId));
-        } else {
-            setSelectedItems([...selectedItems, itemId]);
-        }
-    };
+      setCartItems((items) => items.filter((item) => item.id !== itemId));
+      setSelectedItems((items) => items.filter((id) => id !== itemId));
+    } catch (err) {
+      console.error("Xóa sản phẩm thất bại:", err);
+    }
+  };
 
-    const handleSelectAll = () => {
-        if (selectedItems.length === cartItems.length) {
-            setSelectedItems([]);
-        } else {
-            setSelectedItems(cartItems.map(item => item.id));
-        }
-    };
+  const handleSelectItem = (itemId) => {
+    setSelectedItems((current) => (current.includes(itemId) ? current.filter((id) => id !== itemId) : [...current, itemId]));
+  };
 
-    const calculateTotal = () => {
-        return cartItems
-            .filter(item => selectedItems.includes(item.id))
-            .reduce((total, item) => total + item.price * item.quantity, 0);
-    };
+  const handleSelectAll = () => {
+    setSelectedItems(selectedItems.length === cartItems.length ? [] : cartItems.map((item) => item.id));
+  };
 
-    const renderCartRows = () => {
-        return cartItems.map(item => (
-            <tr key={item.id}>
-                <td>
-                    <input
-                        type="checkbox"
-                        checked={selectedItems.includes(item.id)}
-                        onChange={() => handleSelectItem(item.id)}
-                    />
-                </td>
-                <td>
-                    <img src={item.image} alt={item.name} className="cart-item-image" />
-                </td>
-                <td>{item.name}</td>
-                <td>
-                    {item.sale_price > 0 ? (
-                        <span className="text-danger fw-bold">
-                            {Number(item.sale_price).toLocaleString("vi-VN")} đ
+  const selectedCartItems = cartItems.filter((item) => selectedItems.includes(item.id));
+  const total = selectedCartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  return (
+    <main className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+      <div className="mb-8">
+        <p className="text-sm font-bold uppercase tracking-[0.24em] text-clay">Shopping bag</p>
+        <h1 className="mt-2 font-display text-4xl font-bold text-ink md:text-5xl">Giỏ hàng của bạn</h1>
+      </div>
+
+      <div className="grid gap-8 lg:grid-cols-[1fr_360px]">
+        <section className="overflow-hidden rounded-[2rem] bg-white shadow-soft">
+          <div className="flex items-center justify-between border-b border-black/10 px-6 py-4">
+            <label className="flex items-center gap-3 font-bold text-ink">
+              <input
+                type="checkbox"
+                checked={cartItems.length > 0 && selectedItems.length === cartItems.length}
+                onChange={handleSelectAll}
+                className="h-4 w-4 accent-clay"
+              />
+              Chọn tất cả
+            </label>
+            <span className="text-sm font-semibold text-neutral-500">{cartItems.length} sản phẩm</span>
+          </div>
+
+          <div className="divide-y divide-black/10">
+            {cartItems.length > 0 ? (
+              cartItems.map((item) => (
+                <article key={item.id} className="grid gap-4 p-5 md:grid-cols-[auto_110px_1fr_auto] md:items-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(item.id)}
+                    onChange={() => handleSelectItem(item.id)}
+                    className="h-4 w-4 accent-clay"
+                  />
+                  <img src={item.image} alt={item.name} className="h-28 w-28 rounded-2xl object-cover" />
+                  <div>
+                    <h3 className="text-lg font-extrabold text-ink">{item.name}</h3>
+                    <p className="mt-2 text-sm text-neutral-500">
+                      Màu: {item.color || "N/A"} · Size: {item.size || "N/A"}
+                    </p>
+                    <p className="mt-3 text-xl font-extrabold text-ink">
+                      {Number(item.price).toLocaleString("vi-VN")}đ
+                      {item.sale_price > 0 && item.sale_price < item.original_price && (
+                        <span className="ml-2 text-sm font-semibold text-neutral-400">
+                          {Number(item.original_price).toLocaleString("vi-VN")}đ
                         </span>
-                    ) : (
-                        <span className="fw-bold">
-                            {Number(item.original_price).toLocaleString("vi-VN")} đ
-                        </span>
-                    )}
-                </td>
-                <td>{item.color || "N/A"}</td>
-                <td>{item.size || "N/A"}</td>
-                <td>
-                    <input
-                        type="number"
-                        min="1"
-                        value={item.quantity}
-                        onChange={(e) => {
-                            const quantity = Math.max(1, parseInt(e.target.value));
-                            updateQuantity(item.id, quantity);
-                        }}
-                        className="cart-item-quantity-input"
-                    />
-                </td>
-                <td>
-                    <button onClick={() => removeItem(item.id)} className="cart-item-remove-button">
-                        Xoá
+                      )}
+                    </p>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <div className="inline-flex items-center rounded-full border border-black/10 bg-linen p-1">
+                      <button
+                        className="grid h-9 w-9 place-items-center rounded-full bg-white"
+                        onClick={() => updateQuantity(item.id, Math.max(1, item.quantity - 1))}
+                      >
+                        <Minus size={16} />
+                      </button>
+                      <span className="grid h-9 w-12 place-items-center font-bold">{item.quantity}</span>
+                      <button className="grid h-9 w-9 place-items-center rounded-full bg-white" onClick={() => updateQuantity(item.id, item.quantity + 1)}>
+                        <Plus size={16} />
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => removeItem(item.id)}
+                      className="grid h-10 w-10 place-items-center rounded-full bg-red-50 text-red-600 hover:bg-red-100"
+                      aria-label="Xóa sản phẩm"
+                    >
+                      <Trash2 size={18} />
                     </button>
-                </td>
-            </tr>
-        ));
-    };
+                  </div>
+                </article>
+              ))
+            ) : (
+              <div className="p-10 text-center text-neutral-500">Giỏ hàng của bạn đang trống.</div>
+            )}
+          </div>
+        </section>
 
-    const renderCartSummary = () => (
-        <>
-            <h2>Tóm tắt đơn hàng</h2>
-            <p>
-                Tổng ({selectedItems.length} sản phẩm):{" "}
-                {calculateTotal().toLocaleString("vi-VN")} đ
-            </p>
-            <div className="discount-section">
-                <input
-                    type="text"
-                    placeholder="Nhập mã giảm giá"
-                    className="discount-input"
-                />
-                <button className="apply-discount-button">Áp dụng</button>
+        <aside className="h-fit rounded-[2rem] bg-white p-6 shadow-soft">
+          <h2 className="font-display text-3xl font-bold text-ink">Tóm tắt đơn hàng</h2>
+          <div className="mt-6 space-y-4 text-sm font-semibold text-neutral-600">
+            <div className="flex justify-between">
+              <span>Sản phẩm đã chọn</span>
+              <span>{selectedItems.length}</span>
             </div>
-            <button className="cart-checkout-button" disabled={!selectedItems.length}>
-                <Link
-                    to="/payment"
-                    state={{
-                        selectedItems: cartItems.filter(item =>
-                            selectedItems.includes(item.id)
-                        ).map(item => ({
-                            ...item,
-                            cart_id: item.id
-                        })),
-                        total: calculateTotal()
-                    }}
-                    className="text-white text-decoration-none"
-                >
-                    Thanh toán
-                </Link>
-            </button>
-        </>
-    );
-
-    return (
-        <main className="container">
-            <div className="cart-container">
-                <div className="cart-main">
-                    <h2 className="cart-title">Giỏ hàng của bạn</h2>
-                    <table className="cart-table">
-                        <thead>
-                            <tr>
-                                <th>
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedItems.length === cartItems.length}
-                                        onChange={handleSelectAll}
-                                    />
-                                </th>
-                                <th>Hình ảnh</th>
-                                <th>Tên sản phẩm</th>
-                                <th>Giá</th>
-                                <th>Màu</th>
-                                <th>Size</th>
-                                <th>Số lượng</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {renderCartRows()}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="cart-sidebar">
-                    {renderCartSummary()}
-                </div>
+            <div className="flex justify-between text-lg font-extrabold text-ink">
+              <span>Tổng tiền</span>
+              <span>{total.toLocaleString("vi-VN")}đ</span>
             </div>
-        </main>
-    );
+          </div>
+          <div className="mt-6 flex gap-2">
+            <input className="min-w-0 flex-1 rounded-full border border-black/10 bg-linen px-4 py-3 text-sm outline-none ring-clay/20 focus:ring-4" placeholder="Mã giảm giá" />
+            <button className="rounded-full bg-linen px-4 py-3 text-sm font-bold text-clay">Áp dụng</button>
+          </div>
+          <Link
+            to="/payment"
+            state={{
+              selectedItems: selectedCartItems.map((item) => ({ ...item, cart_id: item.id })),
+              total,
+            }}
+            className={`mt-6 block rounded-full px-6 py-3 text-center font-bold text-white no-underline transition ${
+              selectedItems.length ? "bg-ink hover:bg-clay" : "pointer-events-none bg-neutral-300"
+            }`}
+          >
+            Thanh toán
+          </Link>
+        </aside>
+      </div>
+    </main>
+  );
 }
 
 export default Cart;

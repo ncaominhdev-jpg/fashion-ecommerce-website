@@ -6,23 +6,18 @@ import CustomerReviews from "../Home/CustomerReviews/CustomerReviews";
 import FashionTipsSlider from "./FashionTipsSlider/FashionTipsSlider";
 
 const Shop = () => {
-
-    return (
-        <>
-            <ShopHeroSection />
-            <main className="container">
-                <ProductSidebar />
-
-                <FeaturedProducts />
-
-                <DealsSlider />
-
-                <CustomerReviews />
-
-                <FashionTipsSlider />
-            </main>
-        </>
-    );
+  return (
+    <div className="font-sans">
+      <ShopHeroSection />
+      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <ProductSidebar />
+        <FeaturedProducts />
+        <DealsSlider />
+        <CustomerReviews />
+        <FashionTipsSlider />
+      </main>
+    </div>
+  );
 };
 
 export default Shop;
