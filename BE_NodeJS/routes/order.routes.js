@@ -20,7 +20,7 @@ router.get('/order/:id', checkJWT, OrderController.getById);
 router.post('/order/add', checkJWT, OrderController.create);
 
 //Admin cập nhật trạng thái đơn hàng
-router.put('/order/:id', checkJWT, isAdmin, OrderController.update);
+router.put('/order/:id', checkJWT, OrderController.update);
 
 //Admin xóa đơn hàng
 router.delete('/order/:id', checkJWT, isAdmin, OrderController.delete);

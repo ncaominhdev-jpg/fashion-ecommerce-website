@@ -2,6 +2,8 @@ const connection = require('../database');
 const { DataTypes } = require('sequelize');
 const User = require ('./usersModel')
 const Address = require ('./addressModel')
+const OrderDetail = require('./orderDetailModel');
+const Payment = require('./paymentModel');
 const Order = connection.define('Order', {
   id: {
     type: DataTypes.INTEGER,
@@ -40,4 +42,14 @@ Order.belongsTo(Address, {
   foreignKey: 'address_id',
   as: 'orderAddress' // Alias của mối quan hệ
 });
+Order.hasMany(OrderDetail, {
+  foreignKey: 'order_id',
+  as: 'details'
+});
+
+Order.hasOne(Payment, {
+  foreignKey: 'order_id',
+  as: 'payment'
+});
+
 module.exports = Order;

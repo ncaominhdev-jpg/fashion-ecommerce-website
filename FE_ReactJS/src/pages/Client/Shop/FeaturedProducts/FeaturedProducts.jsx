@@ -14,7 +14,6 @@ const tabs = [
 ];
 
 const cleanText = (value) => String(value || "");
-
 const formatPrice = (value) => `${Number(value || 0).toLocaleString("vi-VN")}đ`;
 
 const FeaturedProducts = () => {
@@ -24,20 +23,45 @@ const FeaturedProducts = () => {
   useEffect(() => {
     const getProducts = async () => {
       try {
-        const res = await axios.get(`${Constants.DOMAIN_API}/product/list`);
-        const formatted = (res.data.data || []).map((product) => ({
-          id: product.id,
-          name: product.name,
-          price: parseFloat(product.sale_price) > 0 ? parseFloat(product.sale_price) : parseFloat(product.price),
-          oldPrice: parseFloat(product.sale_price) > 0 ? parseFloat(product.price) : null,
-          img: product.image,
-          createdAt: product.createdAt,
-          featured: product.featured,
-          sale_price: parseFloat(product.sale_price),
-        }));
+        const [productRes, categoryRes, brandRes] = await Promise.all([
+          axios.get(`${Constants.DOMAIN_API}/product/list`),
+          axios.get(`${Constants.DOMAIN_API}/category/list`),
+          axios.get(`${Constants.DOMAIN_API}/brand/list`),
+        ]);
+
+        const activeCategoryIds = new Set(
+          (categoryRes.data.data || [])
+            .filter((category) => category.status === "active")
+            .map((category) => Number(category.id))
+        );
+        const brandById = new Map(
+          (brandRes.data.data || [])
+            .filter((brand) => brand.status !== "inactive")
+            .map((brand) => [Number(brand.id), brand])
+        );
+
+        const formatted = (productRes.data.data || [])
+          .filter(
+            (product) =>
+              product.visibility !== "hidden" &&
+              activeCategoryIds.has(Number(product.category_id)) &&
+              (!product.brand_id || brandById.has(Number(product.brand_id)))
+          )
+          .map((product) => ({
+            id: product.id,
+            name: product.name,
+            price: Number(product.sale_price) > 0 ? Number(product.sale_price) : Number(product.price),
+            oldPrice: Number(product.sale_price) > 0 && Number(product.sale_price) < Number(product.price) ? Number(product.price) : null,
+            img: product.image,
+            createdAt: product.createdAt,
+            featured: product.featured,
+            salePrice: Number(product.sale_price),
+            brandName: brandById.get(Number(product.brand_id))?.name || "Poly Fashion",
+          }));
+
         setAllProducts(formatted);
-      } catch (err) {
-        console.error("Lỗi lấy sản phẩm:", err);
+      } catch (error) {
+        console.error("Lỗi lấy sản phẩm:", error);
       }
     };
 
@@ -50,7 +74,7 @@ const FeaturedProducts = () => {
     const diffInDays = (now - createdDate) / (1000 * 60 * 60 * 24);
 
     if (activeCategory === "new-arrival") return diffInDays <= 14;
-    if (activeCategory === "flash-sale") return product.sale_price > 0 && product.sale_price < product.oldPrice;
+    if (activeCategory === "flash-sale") return product.oldPrice && product.salePrice > 0;
     return product.featured === "featured";
   });
 
@@ -85,6 +109,7 @@ const FeaturedProducts = () => {
           {tabs.map((tab) => (
             <button
               key={tab.key}
+              type="button"
               onClick={() => setActiveCategory(tab.key)}
               className={`rounded-full px-4 py-2 text-sm font-bold transition ${
                 activeCategory === tab.key ? "bg-ink text-white shadow-sm" : "text-neutral-600 hover:text-ink"
@@ -120,7 +145,7 @@ const FeaturedProducts = () => {
 
                 <div className="flex flex-1 flex-col p-6">
                   <div className="mb-3 flex items-center justify-between gap-3">
-                    <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-clay">Poly Fashion</p>
+                    <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-clay">{product.brandName}</p>
                     {product.oldPrice && (
                       <span className="rounded-full bg-red-50 px-2.5 py-1 text-[11px] font-bold text-red-600">Sale</span>
                     )}
@@ -133,7 +158,9 @@ const FeaturedProducts = () => {
                   <div className="mt-5 flex flex-wrap items-end gap-2">
                     <span className="text-2xl font-bold leading-none text-ink">{formatPrice(product.price)}</span>
                     {product.oldPrice && (
-                      <span className="text-sm font-semibold leading-none text-neutral-400">{formatPrice(product.oldPrice)}</span>
+                      <span className="text-sm font-semibold leading-none text-neutral-400 line-through">
+                        {formatPrice(product.oldPrice)}
+                      </span>
                     )}
                   </div>
 

@@ -30,7 +30,7 @@ export default function ProfilePage() {
         const parsed = JSON.parse(storedUser);
         setLocalUser({
           ...parsed,
-          avatarPreview: parsed.avatar || require("../../../assets/img/user-4.jpg"),
+          avatarPreview: parsed.avatar || require("../../../assets/img/pf-profile-avatar.jpg"),
         });
       } else {
         setUpdateStatus({ message: "Không tìm thấy dữ liệu người dùng.", type: "error" });
@@ -150,7 +150,7 @@ export default function ProfilePage() {
             alt="Avatar"
             className="mx-auto h-44 w-44 rounded-full object-cover ring-8 ring-linen"
             onError={(e) => {
-              e.target.src = require("../../../assets/img/user-4.jpg");
+              e.target.src = require("../../../assets/img/pf-profile-avatar.jpg");
             }}
           />
           {isEditing && (

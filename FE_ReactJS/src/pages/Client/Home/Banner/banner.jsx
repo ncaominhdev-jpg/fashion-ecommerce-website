@@ -5,10 +5,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const banners = [
-  { id: 1, title: "Bộ sưu tập 2026", desc: "Những thiết kế tinh gọn, sang và dễ phối cho tủ đồ mỗi ngày.", img: require("../../../../assets/img/xuhuong.webp") },
-  { id: 2, title: "Summer Resort", desc: "Chất liệu nhẹ, form thoáng và bảng màu sáng cho mùa hè.", img: require("../../../../assets/img/muahe.webp") },
-  { id: 3, title: "Office Edit", desc: "Trang phục công sở thanh lịch, vừa chuyên nghiệp vừa thời trang.", img: require("../../../../assets/img/congso.webp") },
-  { id: 4, title: "Streetwear Select", desc: "Oversized, denim, sneaker và những outfit đậm cá tính.", img: require("../../../../assets/img/catinh.webp") },
+  { id: 1, title: "Bộ sưu tập 2026", desc: "Những thiết kế tinh gọn, sang và dễ phối cho tủ đồ mỗi ngày.", img: require("../../../../assets/img/banner-collection-2026.png") },
+  { id: 2, title: "Summer Resort", desc: "Chất liệu nhẹ, form thoáng và bảng màu sáng cho mùa hè.", img: require("../../../../assets/img/banner-summer-resort.png") },
+  { id: 3, title: "Office Edit", desc: "Trang phục công sở thanh lịch, vừa chuyên nghiệp vừa thời trang.", img: require("../../../../assets/img/banner-office-edit.png") },
+  { id: 4, title: "Streetwear Select", desc: "Oversized, denim, sneaker và những outfit đậm cá tính.", img: require("../../../../assets/img/banner-streetwear-select.png") },
 ];
 
 const BannerSlider = () => {

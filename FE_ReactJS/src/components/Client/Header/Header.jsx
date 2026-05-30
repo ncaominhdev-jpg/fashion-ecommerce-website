@@ -3,8 +3,8 @@ import { FaSearch, FaShoppingBag } from "react-icons/fa";
 import { Menu, X } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
-import logo from "../../../assets/img/logo.webp";
-import userFallback from "../../../assets/img/user-4.jpg";
+import logo from "../../../assets/img/newlogo.png";
+import userFallback from "../../../assets/img/pf-profile-avatar.jpg";
 import axios from "axios";
 import Constants from "../../../Constants";
 

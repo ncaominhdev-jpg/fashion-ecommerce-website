@@ -15,16 +15,18 @@ import OrderUser from "./pages/Client/Order/Order";
 import ShippingAddressManager from "./pages/Client/ShippingAddress.Manager/ShippingAddressManager";
 import AdminProtectedRoute from "./components/Admin/AdminProtectedRoute";
 import OrderDetailUser from "./pages/Client/OrderDetails/OrderDetails";
-import Dashboard from "./view/pages/admin/home/home";
-import Product from "./view/pages/admin/product/product";
-import Category from "./view/pages/admin/category/category";
-import Order from "./view/pages/admin/oder/oder";
-import User from "./view/pages/admin/user/user";
-import Comment from "./view/pages/admin/comment/comment";
-import EditCategory from "./view/pages/admin/category/edit-category/edit-category";
-import AddCategory from "./view/pages/admin/category/add-category/add-category";
-import AddProduct from "./view/pages/admin/product/add-product/add-product";
-import EditProduct from "./view/pages/admin/product/edit-product/edit-product";
+import Dashboard from "./pages/Admin/home/home";
+import Product from "./pages/Admin/product/product";
+import Category from "./pages/Admin/category/category";
+import Order from "./pages/Admin/oder/oder";
+import User from "./pages/Admin/user/user";
+import Comment from "./pages/Admin/comment/comment";
+import Size from "./pages/Admin/size/size";
+import Color from "./pages/Admin/color/color";
+import Brand from "./pages/Admin/brand/brand";
+import TargetGroup from "./pages/Admin/target-group/target-group";
+import Variant from "./pages/Admin/variant/variant";
+import Inventory from "./pages/Admin/inventory/inventory";
 
 function AdminLayout() {
   return <Outlet />;
@@ -83,11 +85,13 @@ function App() {
         >
           <Route index element={<Dashboard />} />
           <Route path="product" element={<Product />} />
-          <Route path="AddProduct" element={<AddProduct />} />
-          <Route path="EditProduct/:id" element={<EditProduct />} />
           <Route path="categories" element={<Category />} />
-          <Route path="EditCategory/:id" element={<EditCategory />} />
-          <Route path="AddCategory" element={<AddCategory />} />
+          <Route path="brands" element={<Brand />} />
+          <Route path="sizes" element={<Size />} />
+          <Route path="colors" element={<Color />} />
+          <Route path="target-groups" element={<TargetGroup />} />
+          <Route path="variants" element={<Variant />} />
+          <Route path="inventory" element={<Inventory />} />
           <Route path="orders" element={<Order />} />
           <Route path="users" element={<User />} />
           <Route path="comments" element={<Comment />} />

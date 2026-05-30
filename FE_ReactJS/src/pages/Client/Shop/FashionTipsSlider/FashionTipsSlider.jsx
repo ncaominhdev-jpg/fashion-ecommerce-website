@@ -4,11 +4,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const articles = [
-  { id: 1, title: "5 cách phối đồ với áo blazer để trông sành điệu hơn", image: require("../../../../assets/img/5cachphoido.webp"), link: "#" },
-  { id: 2, title: "Mặc gì cho ngày hẹn hò? Gợi ý outfit đẹp mê", image: require("../../../../assets/img/macgichongayhenho.webp"), link: "#" },
-  { id: 3, title: "Mix & match: Cách phối đồ với giày sneaker", image: require("../../../../assets/img/cachphoidovoisneaker.webp"), link: "#" },
-  { id: 4, title: "Bí quyết chọn màu sắc trang phục hợp tone da", image: require("../../../../assets/img/mausactrangphucphuhopvoimauda.webp"), link: "#" },
-  { id: 5, title: "Xu hướng thời trang 2026 và những item nên có", image: require("../../../../assets/img/xuhuong2025.webp"), link: "#" },
+  { id: 1, title: "5 cách phối đồ với áo blazer để trông sành điệu hơn", image: require("../../../../assets/img/pf-tip-blazer.jpg"), link: "#" },
+  { id: 2, title: "Mặc gì cho ngày hẹn hò? Gợi ý outfit đẹp mê", image: require("../../../../assets/img/pf-tip-date-night.jpg"), link: "#" },
+  { id: 3, title: "Mix & match: Cách phối đồ với giày sneaker", image: require("../../../../assets/img/pf-tip-sneaker.jpg"), link: "#" },
+  { id: 4, title: "Bí quyết chọn màu sắc trang phục hợp tone da", image: require("../../../../assets/img/pf-tip-color-tone.jpg"), link: "#" },
+  { id: 5, title: "Xu hướng thời trang 2026 và những item nên có", image: require("../../../../assets/img/pf-fashion-trends-2026.jpg"), link: "#" },
 ];
 
 const FashionTipsSlider = () => {
