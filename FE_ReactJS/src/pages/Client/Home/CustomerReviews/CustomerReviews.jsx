@@ -3,10 +3,10 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const reviews = [
-  { id: 1, name: "Nguyễn Văn A", rating: 5, review: "Sản phẩm chất lượng, giao hàng nhanh. Mình rất hài lòng!", img: require("../../../../assets/img/aothun.webp") },
-  { id: 2, name: "Trần Thị B", rating: 4, review: "Màu sắc đẹp, đúng mô tả. Mình sẽ ủng hộ lần sau!", img: require("../../../../assets/img/aothun.webp") },
-  { id: 3, name: "Lê Hoàng C", rating: 5, review: "Mua lần thứ 2 rồi, rất đáng tiền. Chất vải đẹp.", img: require("../../../../assets/img/aothun.webp") },
-  { id: 4, name: "Phạm Minh D", rating: 4, review: "Tư vấn nhiệt tình, sản phẩm đúng hình. Giao nhanh!", img: require("../../../../assets/img/aothun.webp") },
+  { id: 1, name: "Nguyễn Văn A", rating: 5, review: "Sản phẩm chất lượng, giao hàng nhanh. Mình rất hài lòng!", img: require("../../../../assets/img/pf-review-avatar.jpg") },
+  { id: 2, name: "Trần Thị B", rating: 4, review: "Màu sắc đẹp, đúng mô tả. Mình sẽ ủng hộ lần sau!", img: require("../../../../assets/img/pf-review-avatar.jpg") },
+  { id: 3, name: "Lê Hoàng C", rating: 5, review: "Mua lần thứ 2 rồi, rất đáng tiền. Chất vải đẹp.", img: require("../../../../assets/img/pf-review-avatar.jpg") },
+  { id: 4, name: "Phạm Minh D", rating: 4, review: "Tư vấn nhiệt tình, sản phẩm đúng hình. Giao nhanh!", img: require("../../../../assets/img/pf-review-avatar.jpg") },
 ];
 
 const CustomerReviews = () => {

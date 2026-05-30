@@ -38,10 +38,14 @@ class BrandController {
     // Tạo thương hiệu mới (kèm logo)
     static async create(req, res) {
         try {
-            const { name } = req.body;
+            const { name, status } = req.body;
             const logo = req.file ? `/images/${req.file.filename}` : null;
 
-            const newBrand = await BrandModel.create({ name, logo });
+            const newBrand = await BrandModel.create({
+                name,
+                logo,
+                status: status === 'inactive' ? 'inactive' : 'active'
+            });
 
             res.status(201).json({
                 message: "Tạo thương hiệu mới thành công",
@@ -61,11 +65,12 @@ class BrandController {
                 return res.status(404).json({ message: "Id thương hiệu không tồn tại" });
             }
 
-            const { name } = req.body;
+            const { name, status } = req.body;
             const logo = req.file ? `/images/${req.file.filename}` : brand.logo;
 
             brand.name = name || brand.name;
             brand.logo = logo;
+            brand.status = status === 'inactive' ? 'inactive' : 'active';
 
             await brand.save();
 

@@ -16,6 +16,12 @@ const Brand = connection.define('Brand', {
     logo: 
     {
         type: DataTypes.STRING
+    },
+    status:
+    {
+        type: DataTypes.ENUM('active', 'inactive'),
+        allowNull: false,
+        defaultValue: 'active'
     }
 }, {
     tableName: 'brands',

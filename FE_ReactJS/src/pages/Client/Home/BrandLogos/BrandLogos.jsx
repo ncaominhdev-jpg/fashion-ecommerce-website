@@ -3,12 +3,12 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const brandLogos = [
-  { id: 1, img: require("../../../../assets/img/nike.png"), alt: "Nike" },
-  { id: 2, img: require("../../../../assets/img/logo-adidas.jpg"), alt: "Adidas" },
-  { id: 3, img: require("../../../../assets/img/gucci-logo.jpg"), alt: "Gucci" },
-  { id: 4, img: require("../../../../assets/img/Louis-Vuitton-logo.png"), alt: "Louis Vuitton" },
-  { id: 5, img: require("../../../../assets/img/chanel-logo.png"), alt: "Chanel" },
-  { id: 6, img: require("../../../../assets/img/zara-logo.png"), alt: "Zara" },
+  { id: 1, img: require("../../../../assets/img/pf-brand-active.png"), alt: "PF Active" },
+  { id: 2, img: require("../../../../assets/img/pf-brand-studio.png"), alt: "PF Studio" },
+  { id: 3, img: require("../../../../assets/img/pf-brand-luxe.png"), alt: "PF Luxe" },
+  { id: 4, img: require("../../../../assets/img/pf-brand-atelier.png"), alt: "PF Atelier" },
+  { id: 5, img: require("../../../../assets/img/pf-brand-mode.png"), alt: "PF Mode" },
+  { id: 6, img: require("../../../../assets/img/pf-brand-edit.png"), alt: "PF Edit" },
 ];
 
 const BrandLogos = () => {

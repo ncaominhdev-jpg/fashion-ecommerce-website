@@ -43,12 +43,78 @@ const Payment = () => {
   }, [location.state]);
 
   useEffect(() => {
+    if (location.state?.selectedItems) return;
+
+    const params = new URLSearchParams(location.search);
+    const variantId = Number(params.get("variant_id"));
+    const quantity = Math.max(1, Number(params.get("quantity") || 1));
+    if (!variantId) return;
+
+    const fetchBuyNowItem = async () => {
+      try {
+        const [variantRes, productRes, sizeRes, colorRes] = await Promise.all([
+          axios.get(`${Constants.DOMAIN_API}/variant/list`),
+          axios.get(`${Constants.DOMAIN_API}/product/list`),
+          axios.get(`${Constants.DOMAIN_API}/size/list`),
+          axios.get(`${Constants.DOMAIN_API}/color/list`),
+        ]);
+
+        const variant = (variantRes.data.data || []).find((item) => Number(item.id) === variantId);
+        const product = (productRes.data.data || []).find((item) => Number(item.id) === Number(variant?.product_id));
+        const size = (sizeRes.data.data || []).find((item) => Number(item.id) === Number(variant?.size_id));
+        const color = (colorRes.data.data || []).find((item) => Number(item.id) === Number(variant?.color_id));
+
+        if (!variant || !product) {
+          toast.error("Không tìm thấy sản phẩm cần thanh toán");
+          setProducts([]);
+          return;
+        }
+
+        const originalPrice = Number(product.price || 0);
+        const salePrice = Number(product.sale_price || 0);
+        const finalPrice = salePrice > 0 && salePrice < originalPrice ? salePrice : originalPrice;
+
+        setProducts([
+          {
+            id: `variant-${variant.id}`,
+            product_id: product.id,
+            variant_id: variant.id,
+            name: product.name,
+            image: product.image,
+            price: finalPrice,
+            quantity,
+            size: size?.size_label || "Không rõ",
+            color: color?.color_name || "Không rõ",
+          },
+        ]);
+      } catch (error) {
+        console.error("Lỗi tải sản phẩm mua ngay:", error.response?.data || error);
+        toast.error("Không thể tải sản phẩm cần thanh toán");
+      }
+    };
+
+    fetchBuyNowItem();
+  }, [location.search, location.state]);
+
+  useEffect(() => {
     const handleFocus = () => fetchUserAddresses();
     window.addEventListener("focus", handleFocus);
     return () => window.removeEventListener("focus", handleFocus);
   }, [fetchUserAddresses]);
 
   const handleConfirmPayment = async () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    if (!user?.id || !cookies.token) {
+      toast.warning("Vui lòng đăng nhập để đặt hàng!");
+      navigate("/login");
+      return;
+    }
+    if (products.length === 0) {
+      toast.warning("Không có sản phẩm nào để thanh toán!");
+      navigate("/cart");
+      return;
+    }
     if (selectedAddressIndex === "") {
       toast.warning("Vui lòng chọn địa chỉ nhận hàng!");
       return;
@@ -59,12 +125,13 @@ const Payment = () => {
     }
 
     const selectedAddress = addresses[Number(selectedAddressIndex)];
-    const user = JSON.parse(localStorage.getItem("user"));
     const payload = {
       user_id: user.id,
       address_id: selectedAddress.id,
       note: "",
       amount: total,
+      shipping_fee: shippingFee,
+      discount,
       payment_method: paymentMethod,
       products: products.map((product) => ({
         variant_id: product.variant_id,

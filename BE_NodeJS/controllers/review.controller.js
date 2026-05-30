@@ -70,7 +70,7 @@ class ReviewController {
       }
   
       // ✅ Kiểm tra quyền (chủ review hoặc admin)
-      if (req.user.id !== review.user_id && req.user.role !== 'Admin') {
+      if (Number(req.user.id) !== Number(review.user_id) && req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Bạn không có quyền chỉnh sửa đánh giá này.' });
       }
   
@@ -96,7 +96,7 @@ class ReviewController {
       }
   
       // ✅ Kiểm tra quyền (chủ review hoặc admin)
-      if (req.user.id !== review.user_id && req.user.role !== 'Admin') {
+      if (Number(req.user.id) !== Number(review.user_id) && req.user.role !== 'admin') {
         return res.status(403).json({ message: 'Bạn không có quyền xoá đánh giá này.' });
       }
   

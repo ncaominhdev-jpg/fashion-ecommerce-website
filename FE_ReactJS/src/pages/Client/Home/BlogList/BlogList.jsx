@@ -1,9 +1,9 @@
 import { Link } from "react-router-dom";
 
 const blogPosts = [
-  { id: 1, title: "Cách phối đồ theo dáng người", desc: "Mẹo chọn trang phục giúp tôn dáng và che khuyết điểm hiệu quả.", img: require("../../../../assets/img/phoi-do-dang-nguoi.webp") },
-  { id: 2, title: "Màu sắc hợp mệnh 2026", desc: "Chọn trang phục theo phong cách cá nhân và năng lượng màu sắc.", img: require("../../../../assets/img/mau-sac-hop-menh.webp") },
-  { id: 3, title: "5 xu hướng thời trang nổi bật", desc: "Những phong cách đang lên ngôi và dễ ứng dụng trong đời sống.", img: require("../../../../assets/img/xu-huong-thoi-trang.webp") },
+  { id: 1, title: "Cách phối đồ theo dáng người", desc: "Mẹo chọn trang phục giúp tôn dáng và che khuyết điểm hiệu quả.", img: require("../../../../assets/img/pf-blog-body-shape.jpg") },
+  { id: 2, title: "Màu sắc hợp mệnh 2026", desc: "Chọn trang phục theo phong cách cá nhân và năng lượng màu sắc.", img: require("../../../../assets/img/pf-blog-color-destiny.jpg") },
+  { id: 3, title: "5 xu hướng thời trang nổi bật", desc: "Những phong cách đang lên ngôi và dễ ứng dụng trong đời sống.", img: require("../../../../assets/img/pf-blog-trends.jpg") },
 ];
 
 const BlogList = () => {

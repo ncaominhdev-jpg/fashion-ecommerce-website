@@ -1,9 +1,10 @@
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { Link, useLocation } from "react-router-dom";
 import Constants from "../../../../Constants";
 
 const cleanText = (value) => String(value || "");
+const formatPrice = (value) => `${Number(value || 0).toLocaleString("vi-VN")}đ`;
 
 function useQuery() {
   const { search } = useLocation();
@@ -12,55 +13,68 @@ function useQuery() {
 
 const ProductSidebar = () => {
   const query = useQuery();
-  const initialTarget = parseInt(query.get("target"));
+  const initialTarget = Number.parseInt(query.get("target"), 10);
 
-  const [products, setProducts] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
   const [targetGroups, setTargetGroups] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(null);
-  const [selectedTargetGroup, setSelectedTargetGroup] = useState(initialTarget || null);
+  const [selectedBrand, setSelectedBrand] = useState(null);
+  const [selectedTargetGroup, setSelectedTargetGroup] = useState(Number.isNaN(initialTarget) ? null : initialTarget);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 12;
 
-  const getProducts = useCallback(async () => {
-    try {
-      const res = await axios.get(Constants.DOMAIN_API + "/product/list");
-      let data = (res.data.data || []).filter((product) => product.visibility !== "hidden");
-
-      if (selectedCategory) {
-        data = data.filter((product) => product.category_id === selectedCategory);
-      }
-
-      if (selectedTargetGroup) {
-        data = data.filter((product) => product.target_group_id === selectedTargetGroup);
-      }
-
-      setProducts(data);
-      setCurrentPage(1);
-    } catch (e) {
-      console.error("Lỗi lấy sản phẩm:", e);
-    }
-  }, [selectedCategory, selectedTargetGroup]);
-
   useEffect(() => {
-    axios.get(Constants.DOMAIN_API + "/category/list")
-      .then((res) => setCategories(res.data.data || []))
-      .catch((e) => console.error("Lỗi lấy danh mục:", e));
+    const fetchShopData = async () => {
+      try {
+        const [productRes, categoryRes, targetRes, brandRes] = await Promise.all([
+          axios.get(`${Constants.DOMAIN_API}/product/list`),
+          axios.get(`${Constants.DOMAIN_API}/category/list`),
+          axios.get(`${Constants.DOMAIN_API}/target-group/list`),
+          axios.get(`${Constants.DOMAIN_API}/brand/list`),
+        ]);
 
-    axios.get(Constants.DOMAIN_API + "/target-group/list")
-      .then((res) => setTargetGroups(res.data.data || []))
-      .catch((e) => console.error("Lỗi lấy nhóm thời trang:", e));
+        const activeCategories = (categoryRes.data.data || []).filter((category) => category.status === "active");
+
+        setAllProducts(productRes.data.data || []);
+        setCategories(activeCategories);
+        setTargetGroups(targetRes.data.data || []);
+        setBrands((brandRes.data.data || []).filter((brand) => brand.status !== "inactive"));
+      } catch (error) {
+        console.error("Lỗi lấy dữ liệu shop:", error);
+      }
+    };
+
+    fetchShopData();
   }, []);
 
   useEffect(() => {
-    getProducts();
-  }, [getProducts]);
+    setCurrentPage(1);
+  }, [selectedCategory, selectedBrand, selectedTargetGroup]);
+
+  const activeCategoryIds = useMemo(() => new Set(categories.map((category) => Number(category.id))), [categories]);
+  const brandById = useMemo(() => new Map(brands.map((brand) => [Number(brand.id), brand])), [brands]);
+
+  const products = useMemo(() => {
+    return allProducts.filter((product) => {
+      const isVisible = product.visibility !== "hidden";
+      const isActiveCategory = activeCategoryIds.has(Number(product.category_id));
+      const matchesCategory = !selectedCategory || Number(product.category_id) === Number(selectedCategory);
+      const matchesBrand = !selectedBrand || Number(product.brand_id) === Number(selectedBrand);
+      const isActiveBrand = !product.brand_id || brandById.has(Number(product.brand_id));
+      const matchesTarget = !selectedTargetGroup || Number(product.target_group_id) === Number(selectedTargetGroup);
+
+      return isVisible && isActiveCategory && isActiveBrand && matchesCategory && matchesBrand && matchesTarget;
+    });
+  }, [allProducts, activeCategoryIds, brandById, selectedCategory, selectedBrand, selectedTargetGroup]);
 
   const totalPages = Math.ceil(products.length / productsPerPage);
   const currentProducts = products.slice((currentPage - 1) * productsPerPage, currentPage * productsPerPage);
 
   const resetFilters = () => {
     setSelectedCategory(null);
+    setSelectedBrand(null);
     setSelectedTargetGroup(null);
   };
 
@@ -76,53 +90,54 @@ const ProductSidebar = () => {
         <p className="text-sm font-semibold text-neutral-500">{products.length} sản phẩm phù hợp</p>
       </div>
 
-      <div className="grid gap-8 lg:grid-cols-[260px_1fr]">
+      <div className="grid gap-8 lg:grid-cols-[280px_1fr]">
         <aside className="h-fit rounded-2xl border border-black/10 bg-white p-5 shadow-soft">
           <div className="mb-6 flex items-center justify-between">
             <h3 className="text-lg font-bold leading-[1.25] text-ink">Bộ lọc</h3>
-            <button onClick={resetFilters} className="text-xs font-bold text-clay hover:text-ink">
+            <button type="button" onClick={resetFilters} className="text-xs font-bold text-clay hover:text-ink">
               Xóa lọc
             </button>
           </div>
 
           <div className="space-y-7">
-            <div>
-              <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-neutral-500">Thời trang</h4>
-              <div className="space-y-2">
-                {targetGroups.map((group) => (
-                  <label key={group.id} className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition hover:bg-linen">
-                    <input
-                      type="radio"
-                      name="target"
-                      value={group.id}
-                      checked={selectedTargetGroup === group.id}
-                      onChange={() => setSelectedTargetGroup(group.id)}
-                      className="h-4 w-4 accent-clay"
-                    />
-                    <span className="text-sm font-semibold text-neutral-700">{cleanText(group.label)}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
+            <FilterGroup title="Thời trang">
+              <RadioItem name="target" checked={!selectedTargetGroup} onChange={() => setSelectedTargetGroup(null)} label="Tất cả" />
+              {targetGroups.map((group) => (
+                <RadioItem
+                  key={group.id}
+                  name="target"
+                  checked={Number(selectedTargetGroup) === Number(group.id)}
+                  onChange={() => setSelectedTargetGroup(group.id)}
+                  label={cleanText(group.label)}
+                />
+              ))}
+            </FilterGroup>
 
-            <div>
-              <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-neutral-500">Loại sản phẩm</h4>
-              <div className="space-y-2">
-                {categories.map((cat) => (
-                  <label key={cat.id} className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition hover:bg-linen">
-                    <input
-                      type="radio"
-                      name="category"
-                      value={cat.id}
-                      checked={selectedCategory === cat.id}
-                      onChange={() => setSelectedCategory(cat.id)}
-                      className="h-4 w-4 accent-clay"
-                    />
-                    <span className="text-sm font-semibold text-neutral-700">{cleanText(cat.name)}</span>
-                  </label>
-                ))}
-              </div>
-            </div>
+            <FilterGroup title="Thương hiệu">
+              <RadioItem name="brand" checked={!selectedBrand} onChange={() => setSelectedBrand(null)} label="Tất cả thương hiệu" />
+              {brands.map((brand) => (
+                <RadioItem
+                  key={brand.id}
+                  name="brand"
+                  checked={Number(selectedBrand) === Number(brand.id)}
+                  onChange={() => setSelectedBrand(brand.id)}
+                  label={cleanText(brand.name)}
+                />
+              ))}
+            </FilterGroup>
+
+            <FilterGroup title="Loại sản phẩm">
+              <RadioItem name="category" checked={!selectedCategory} onChange={() => setSelectedCategory(null)} label="Tất cả loại" />
+              {categories.map((category) => (
+                <RadioItem
+                  key={category.id}
+                  name="category"
+                  checked={Number(selectedCategory) === Number(category.id)}
+                  onChange={() => setSelectedCategory(category.id)}
+                  label={cleanText(category.name)}
+                />
+              ))}
+            </FilterGroup>
           </div>
         </aside>
 
@@ -130,9 +145,9 @@ const ProductSidebar = () => {
           {currentProducts.length > 0 ? (
             <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-3">
               {currentProducts.map((product) => {
-                const hasSale = parseFloat(product.sale_price) > 0;
+                const hasSale = Number(product.sale_price) > 0 && Number(product.sale_price) < Number(product.price);
                 const price = hasSale ? product.sale_price : product.price;
-                const oldPrice = parseFloat(product.price);
+                const brand = brandById.get(Number(product.brand_id));
 
                 return (
                   <Link
@@ -155,14 +170,17 @@ const ProductSidebar = () => {
                         Xem nhanh
                       </span>
                     </div>
+
                     <div className="flex flex-1 flex-col p-5">
-                      <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-clay">Poly Fashion</p>
+                      <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.18em] text-clay">
+                        {brand?.name || "Poly Fashion"}
+                      </p>
                       <h4 className="line-clamp-2 min-h-[3.25rem] text-[17px] font-extrabold leading-snug text-ink">
                         {cleanText(product.name)}
                       </h4>
                       <div className="mt-4 flex flex-wrap items-baseline gap-2">
-                        <span className="text-xl font-black text-ink">{parseInt(price).toLocaleString("vi-VN")}đ</span>
-                        {hasSale && <span className="text-sm font-bold text-neutral-400">{oldPrice.toLocaleString("vi-VN")}đ</span>}
+                        <span className="text-xl font-black text-ink">{formatPrice(price)}</span>
+                        {hasSale && <span className="text-sm font-bold text-neutral-400 line-through">{formatPrice(product.price)}</span>}
                       </div>
                       <span className="mt-auto inline-flex w-full items-center justify-center rounded-full bg-ink px-4 py-3 text-sm font-extrabold text-white transition group-hover:bg-clay">
                         Mua ngay
@@ -183,9 +201,11 @@ const ProductSidebar = () => {
               {Array.from({ length: totalPages }, (_, i) => (
                 <button
                   key={i + 1}
+                  type="button"
                   onClick={() => setCurrentPage(i + 1)}
-                  className={`grid h-10 w-10 place-items-center rounded-full font-bold transition ${currentPage === i + 1 ? "bg-ink text-white" : "bg-white text-ink hover:bg-linen"
-                    }`}
+                  className={`grid h-10 w-10 place-items-center rounded-full font-bold transition ${
+                    currentPage === i + 1 ? "bg-ink text-white" : "bg-white text-ink hover:bg-linen"
+                  }`}
                 >
                   {i + 1}
                 </button>
@@ -197,5 +217,19 @@ const ProductSidebar = () => {
     </section>
   );
 };
+
+const FilterGroup = ({ title, children }) => (
+  <div>
+    <h4 className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-neutral-500">{title}</h4>
+    <div className="max-h-56 space-y-2 overflow-y-auto pr-1">{children}</div>
+  </div>
+);
+
+const RadioItem = ({ name, checked, onChange, label }) => (
+  <label className="flex cursor-pointer items-center gap-3 rounded-xl px-3 py-2 transition hover:bg-linen">
+    <input type="radio" name={name} checked={checked} onChange={onChange} className="h-4 w-4 accent-clay" />
+    <span className="text-sm font-semibold text-neutral-700">{label}</span>
+  </label>
+);
 
 export default ProductSidebar;

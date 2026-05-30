@@ -29,7 +29,7 @@ class PaymentController {
             }
 
             // Kiểm tra quyền truy cập
-            if (req.user.id !== order.user_id && req.user.role !== 'Admin') {
+            if (Number(req.user.id) !== Number(order.user_id) && req.user.role !== 'admin') {
                 return res.status(403).json({ message: 'Bạn không có quyền xem thanh toán của đơn hàng này' });
             }
 

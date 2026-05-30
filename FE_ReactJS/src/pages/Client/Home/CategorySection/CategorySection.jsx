@@ -2,9 +2,9 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Constants from "../../../../Constants";
-import menImage from "../../../../assets/img/nam.webp";
-import womenImage from "../../../../assets/img/nu.webp";
-import kidsImage from "../../../../assets/img/tre em.webp";
+import menImage from "../../../../assets/img/pf-category-men.jpg";
+import womenImage from "../../../../assets/img/pf-category-women.jpg";
+import kidsImage from "../../../../assets/img/pf-category-kids.jpg";
 
 const imageMap = {
   1: menImage,
